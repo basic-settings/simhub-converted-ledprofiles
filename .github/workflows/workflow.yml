@@ -41,4 +41,9 @@ jobs:
           path: '*_iRacing_Yoep_*.ledsprofile'
 
       - name: Add a release tag
-        run: git add '*_iRacing_Yoep_*.ledsprofile' && git commit -m 'Release v${{ env.PROFILE_VERSION }}' && git push && git tag -a v${{ env.PROFILE_VERSION }} -m 'Release v${{ env.PROFILE_VERSION }}' && git push origin v${{ env.PROFILE_VERSION }} 
+        run: |
+             git config user.email ngraved@gmail.com && \
+             git config user.name "Alex C." && \
+             git add '*_iRacing_Yoep_*.ledsprofile' && git commit -m 'Release v${{ env.PROFILE_VERSION }}' && \
+             git push && git tag -a v${{ env.PROFILE_VERSION }} -m 'Release v${{ env.PROFILE_VERSION }}' && \
+             git push origin v${{ env.PROFILE_VERSION }} 
