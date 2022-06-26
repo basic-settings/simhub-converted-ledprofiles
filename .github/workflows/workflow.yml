@@ -1,0 +1,41 @@
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push on 'release/' branches
+  push:
+    branches:
+      - 'release/*'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  generate-profiles:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set release version
+        run: |
+             export VERS=$( ls -la *_iRacing_Yoep* | grep -Eo '[0-9]{8,}' | uniq )
+             echo "PROFILE_VERSION=${VERS}" >> $GITHUB_ENV
+
+      - name: Checkout dependencies
+        uses: actions/checkout@v3
+        with:
+          repository: basic-settings/simhub-ledprofile-converter
+          ssh-key: ${{ secrets.ACC }}
+          path: converter
+
+      - run: ln -s converter/generator generator
+      - run: ./generator offset ${{ secrets.OFFSET_LAYOUTS }}
+      - run: ./generator custom ${{ secrets.CUSTOM_LAYOUTS }}
+
+      - name: Upload generated profiles
+        uses: actions/upload-artifact@v3
+        with:
+          name: 'v${{ env.PROFILE_VERSION }}'
+          path: '*_iRacing_Yoep_*.ledsprofile'
