@@ -39,3 +39,6 @@ jobs:
         with:
           name: 'v${{ env.PROFILE_VERSION }}'
           path: '*_iRacing_Yoep_*.ledsprofile'
+
+      - name: Add a release tag
+        run: git add '*_iRacing_Yoep_*.ledsprofile' && git commit -m 'Release v${{ env.PROFILE_VERSION }}' && git push && git tag -a v${{ env.PROFILE_VERSION }} -m 'Release v${{ env.PROFILE_VERSION }}' && git push origin v${{ env.PROFILE_VERSION }} 
